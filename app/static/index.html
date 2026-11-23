@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2efe7">
+  <title>Mental Health Pulse | Student Wellness</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Student wellness analytics</p>
+      <h1>Mental Health <em>Pulse</em></h1>
+      <p class="lede">Explore how everyday habits relate to a model-estimated score. This is a statistical estimate, not a diagnosis.</p>
+      <p class="api-status" id="apiStatus" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span><span id="apiStatusText">Checking model…</span>
+      </p>
+    </header>
+
+    <div class="layout">
+      <form id="predictForm" class="panel form-panel" novalidate>
+        <div class="alert" id="errorBox" role="alert" hidden>
+          <div class="alert-body">
+            <strong id="errorTitle"></strong>
+            <p id="errorMessage"></p>
+            <ul id="errorList"></ul>
+          </div>
+          <button type="button" id="errorClose" class="alert-close" aria-label="Dismiss error">&times;</button>
+        </div>
+
+        <section class="group">
+          <h2><span class="num">01</span> Profile</h2>
+          <div class="row r3">
+            <div class="field">
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" min="1" max="100" step="1" inputmode="numeric" placeholder="e.g. 21" required>
+              <p class="hint">Years</p>
+              <p class="err" id="err-age"></p>
+            </div>
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" required>
+                <option value="" selected disabled>Select</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </select>
+              <p class="err" id="err-gender"></p>
+            </div>
+            <div class="field">
+              <label for="country">Country</label>
+              <input type="text" id="country" name="country" list="countryList" autocomplete="country-name" maxlength="60" placeholder="e.g. India">
+              <datalist id="countryList">
+                <option value="Australia"></option><option value="Canada"></option>
+                <option value="France"></option><option value="Germany"></option>
+                <option value="India"></option><option value="Mexico"></option>
+                <option value="Turkey"></option><option value="UK"></option>
+                <option value="USA"></option><option value="Other"></option>
+              </datalist>
+              <p class="hint">Optional. Other countries are grouped as Other.</p>
+              <p class="err" id="err-country"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h2><span class="num">02</span> Academic &amp; digital habits</h2>
+          <div class="row r2">
+            <div class="field">
+              <label for="academic_level">Academic level</label>
+              <select id="academic_level" name="academic_level" required>
+                <option value="" selected disabled>Select</option>
+                <option value="High School">High School</option>
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Graduate">Graduate</option>
+              </select>
+              <p class="err" id="err-academic_level"></p>
+            </div>
+            <div class="field">
+              <label for="most_used_platform">Most-used platform</label>
+              <select id="most_used_platform" name="most_used_platform" required>
+                <option value="" selected disabled>Select</option>
+                <option>Facebook</option><option>Instagram</option><option>KakaoTalk</option>
+                <option>LINE</option><option>LinkedIn</option><option>Snapchat</option>
+                <option>TikTok</option><option>Twitter</option><option>VKontakte</option>
+                <option>WeChat</option><option>WhatsApp</option><option>YouTube</option>
+              </select>
+              <p class="err" id="err-most_used_platform"></p>
+            </div>
+            <div class="field">
+              <label for="purpose_of_use">Primary purpose</label>
+              <select id="purpose_of_use" name="purpose_of_use" required>
+                <option value="" selected disabled>Select</option>
+                <option value="Education">Education</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Networking">Networking</option>
+                <option value="News">News</option>
+              </select>
+              <p class="err" id="err-purpose_of_use"></p>
+            </div>
+            <div class="field">
+              <label for="avg_daily_usage_hours">Avg. daily screen time</label>
+              <div class="unit"><input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0.1" max="24" step="any" inputmode="decimal" placeholder="e.g. 4.0" required><span>hrs</span></div>
+              <p class="hint">More than 0, up to 24 hours</p>
+              <p class="err" id="err-avg_daily_usage_hours"></p>
+            </div>
+            <div class="field">
+              <label for="daily_unlocks">Daily phone unlocks</label>
+              <input type="number" id="daily_unlocks" name="daily_unlocks" min="1" max="500" step="1" inputmode="numeric" placeholder="e.g. 134" required>
+              <p class="hint">1–500 per day</p>
+              <p class="err" id="err-daily_unlocks"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h2><span class="num">03</span> Lifestyle &amp; stress</h2>
+          <div class="row r3">
+            <div class="field">
+              <label for="study_hours">Study hours / day</label>
+              <div class="unit"><input type="number" id="study_hours" name="study_hours" min="0.1" max="24" step="any" inputmode="decimal" placeholder="e.g. 4.5" required><span>hrs</span></div>
+              <p class="err" id="err-study_hours"></p>
+            </div>
+            <div class="field">
+              <label for="physical_activity_hours">Physical activity / day</label>
+              <div class="unit"><input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="any" inputmode="decimal" placeholder="e.g. 1.0" required><span>hrs</span></div>
+              <p class="err" id="err-physical_activity_hours"></p>
+            </div>
+            <div class="field">
+              <label for="sleep_hours_per_night">Sleep / night</label>
+              <div class="unit"><input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0.1" max="24" step="any" inputmode="decimal" placeholder="e.g. 7.0" required><span>hrs</span></div>
+              <p class="err" id="err-sleep_hours_per_night"></p>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label" id="lbl-stress">Perceived stress level</span>
+            <div class="segment" role="radiogroup" aria-labelledby="lbl-stress">
+              <label><input type="radio" name="stress_level" value="Low"><span>Low</span></label>
+              <label><input type="radio" name="stress_level" value="Medium"><span>Medium</span></label>
+              <label><input type="radio" name="stress_level" value="High"><span>High</span></label>
+              <label><input type="radio" name="stress_level" value="Very High"><span>Very High</span></label>
+            </div>
+            <p class="err" id="err-stress_level"></p>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button type="submit" id="submitBtn" class="btn primary">
+            <span class="btn-label">Generate my estimate</span><span class="spinner" aria-hidden="true"></span>
+          </button>
+          <button type="button" id="resetBtn" class="btn link">Clear form</button>
+        </div>
+      </form>
+
+      <aside class="panel result-panel" id="resultPanel" aria-live="polite">
+        <svg class="gauge" viewBox="0 0 220 125" aria-hidden="true">
+          <g class="ticks" id="ticks"></g>
+          <path class="g-track" pathLength="100" d="M 20 110 A 90 90 0 0 1 200 110"></path>
+          <path class="g-fill" id="gaugeFill" pathLength="100" d="M 20 110 A 90 90 0 0 1 200 110"></path>
+        </svg>
+        <div class="state state-idle" id="stateIdle">
+          <h3>Your estimate will appear here</h3>
+          <p>Complete the form to get a model-estimated score from 0 to 10.</p>
+        </div>
+        <div class="state state-loading" id="stateLoading" hidden>
+          <div class="pulse" aria-hidden="true"><span></span><span></span><span></span></div>
+          <h3>Reading the signal…</h3>
+          <p>Running your habits through the model.</p>
+        </div>
+        <div class="state state-result" id="stateResult" hidden>
+          <p class="small-label">Estimated mental health score</p>
+          <div class="big"><span id="scoreValue">0.0</span><small>/ 10</small></div>
+          <ul class="chips" id="summaryList"></ul>
+          <p class="fineprint">This is a statistical estimate from a machine-learning model, not a clinical diagnosis. If you are concerned about your wellbeing, please talk with a qualified professional.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer">A student wellness project · Powered by FastAPI and the trained ML model</footer>
+  </main>
+  <script src="/static/script.js" defer></script>
+</body>
+</html>
